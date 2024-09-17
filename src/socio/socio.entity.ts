@@ -10,7 +10,7 @@ import {
   @Entity()
   export class SocioEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
   
     @Column({ unique: true })
     nombreUsuario: string;
