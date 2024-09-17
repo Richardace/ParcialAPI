@@ -2,6 +2,8 @@ import { Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
+import { SocioEntity } from './socio/socio.entity';
+import { ClubEntity } from './club/club.entity';
 
 
 @Module({
@@ -13,6 +15,10 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       username: 'postgres',
       password: 'postgres',
       database: 'club_social',
+      entities: [
+        SocioEntity,
+        ClubEntity
+      ],
       dropSchema: true,
       synchronize: true,
       keepConnectionAlive: true,
