@@ -158,8 +158,7 @@ export class ClubService {
         'The club with the given id was not found',
         BusinessError.NOT_FOUND,
       );
-    }
-  
+    }  
     const socios = await this.socioRepository.findByIds(newSocios);
   
     if (socios.length !== newSocios.length) {
@@ -168,7 +167,6 @@ export class ClubService {
         BusinessError.NOT_FOUND,
       );
     }
-  
     club.socios = socios;
     return await this.clubRepository.save(club);
   }

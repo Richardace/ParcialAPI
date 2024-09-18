@@ -12,10 +12,10 @@ import {
     @PrimaryGeneratedColumn()
     id: string;
   
-    @Column({ unique: true })
+    @Column()
     nombreUsuario: string;
   
-    @Column({ unique: true })
+    @Column()
     correoElectronico: string;
   
     @Column()

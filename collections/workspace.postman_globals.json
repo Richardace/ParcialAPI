@@ -1,0 +1,27 @@
+{
+	"id": "be7688ce-cc0e-4888-8bd4-6183d90ab730",
+	"values": [
+		{
+			"key": "base_url",
+			"value": "http://localhost:3000",
+			"type": "default",
+			"enabled": true
+		},
+		{
+			"key": "id_socio",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		},
+		{
+			"key": "id_club",
+			"value": "",
+			"type": "any",
+			"enabled": true
+		}
+	],
+	"name": "Globals",
+	"_postman_variable_scope": "globals",
+	"_postman_exported_at": "2024-09-18T22:36:38.334Z",
+	"_postman_exported_using": "Postman/11.12.0"
+}

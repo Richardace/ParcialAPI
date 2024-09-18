@@ -1,0 +1,671 @@
+{
+	"info": {
+		"_postman_id": "6c9cad24-5919-4b67-ab3a-2d8e6d3f40fd",
+		"name": "Parcial API's - ClubSocial",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "26834935"
+	},
+	"item": [
+		{
+			"name": "Club",
+			"item": [
+				{
+					"name": "Create Club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"id_club\", data.id);\r",
+									"\r",
+									"pm.test(\"Crear un club valido\", function () {\r",
+									"   pm.response.to.have.status(201);\r",
+									"   pm.expect(data).to.be.an(\"object\");\r",
+									"   pm.expect(data).to.have.property(\"id\");\r",
+									"   pm.expect(data).to.have.property(\"nombre\");\r",
+									"   pm.expect(data).to.have.property(\"fechaFundacion\");\r",
+									"   pm.expect(data).to.have.property(\"descripcion\");\r",
+									"   pm.expect(data).to.have.property(\"imagen\");\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Crear un club incorrecto\", function () {\r",
+									"   if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The club is incorrect\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"\r",
+									"\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Club Deportivo Los Andes\",\r\n  \"fechaFundacion\": \"1992-06-15\",\r\n  \"descripcion\": \"Un club deportivo enfocado en el fútbol juvenil y recreativo.\",\r\n  \"imagen\": \"https://example.com/imagen-club.jpg\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clubs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find all clubs",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Obtener todos los clubs\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an(\"array\");\r",
+									"    responseJson.forEach(function(cuisineCulture) {\r",
+									"        pm.expect(cuisineCulture).to.be.an(\"object\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"id\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"nombre\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"fechaFundacion\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"descripcion\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"imagen\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Obtener un club por ID\", function () {\r",
+									"    if (pm.response.code === 200) {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson).to.be.an(\"object\");\r",
+									"        pm.expect(responseJson).to.have.property(\"id\");\r",
+									"        pm.expect(responseJson).to.have.property(\"nombre\");\r",
+									"        pm.expect(responseJson).to.have.property(\"fechaFundacion\");\r",
+									"        pm.expect(responseJson).to.have.property(\"descripcion\");\r",
+									"        pm.expect(responseJson).to.have.property(\"imagen\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Otener un club que no existe\", function () {\r",
+									"    if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The club with the given id was not found\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Actualizar un club correctamente\", function () {\r",
+									"    if (pm.response.code === 200) {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson).to.be.an(\"object\");\r",
+									"        pm.expect(responseJson).to.have.property(\"id\");\r",
+									"        pm.expect(responseJson).to.have.property(\"nombre\");\r",
+									"        pm.expect(responseJson).to.have.property(\"fechaFundacion\");\r",
+									"        pm.expect(responseJson).to.have.property(\"imagen\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Actualizar un club con ID no existente\", function () {\r",
+									"    if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The club with the given id was not found\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombre\": \"Club Deportivo Cucuta\",\r\n  \"fechaFundacion\": \"1992-06-15\",\r\n  \"descripcion\": \"Un club deportivo enfocado en el fútbol juvenil y recreativo.\",\r\n  \"imagen\": \"https://example.com/imagen-club.jpg\"\r\n}\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clubs/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Eliminar un club correctamente\", function () {\r",
+									"    if (pm.response.code === 204) {\r",
+									"        pm.response.to.have.body('');\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Eliminar un club con id no existente\", function () {\r",
+									"    if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The club with the given id was not found\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs/3",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"3"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Socio",
+			"item": [
+				{
+					"name": "Create Socio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var data = pm.response.json()\r",
+									"pm.globals.set(\"id_socio\", data.id);\r",
+									"\r",
+									"pm.test(\"Crear un socio valido\", function () {\r",
+									"   pm.response.to.have.status(201);\r",
+									"   pm.expect(data).to.be.an(\"object\");\r",
+									"   pm.expect(data).to.have.property(\"id\");\r",
+									"   pm.expect(data).to.have.property(\"nombreUsuario\");\r",
+									"   pm.expect(data).to.have.property(\"correoElectronico\");\r",
+									"   pm.expect(data).to.have.property(\"fechaNacimiento\");\r",
+									"});\r",
+									"\r",
+									"\r",
+									"pm.test(\"Crear un socio incorrecto\", function () {\r",
+									"   if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The socio is incorrect\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombreUsuario\": \"juan.perez\",\r\n  \"correoElectronico\": \"juana.perez@example.com\",\r\n  \"fechaNacimiento\": \"1990-04-23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find all socios",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Obtener todos los socios\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an(\"array\");\r",
+									"    responseJson.forEach(function(cuisineCulture) {\r",
+									"        pm.expect(cuisineCulture).to.be.an(\"object\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"id\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"nombreUsuario\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find one socio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Obtener un socio por ID\", function () {\r",
+									"    if (pm.response.code === 200) {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson).to.be.an(\"object\");\r",
+									"        pm.expect(responseJson).to.have.property(\"id\");\r",
+									"        pm.expect(responseJson).to.have.property(\"nombreUsuario\");\r",
+									"        pm.expect(responseJson).to.have.property(\"correoElectronico\");\r",
+									"        pm.expect(responseJson).to.have.property(\"fechaNacimiento\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Otener un socio que no existe\", function () {\r",
+									"    if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The socio with the given id was not found\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update socio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Actualizar un socio correctamente\", function () {\r",
+									"    if (pm.response.code === 200) {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson).to.be.an(\"object\");\r",
+									"        pm.expect(responseJson).to.have.property(\"id\");\r",
+									"        pm.expect(responseJson).to.have.property(\"nombreUsuario\");\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Actualizar un socio con ID no existente\", function () {\r",
+									"    if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The socio with the given id was not found\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n  \"nombreUsuario\": \"richard.acevedo\",\r\n  \"correoElectronico\": \"juan.perez@example.com\",\r\n  \"fechaNacimiento\": \"1990-04-23\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete socio",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Eliminar un socio correctamente\", function () {\r",
+									"    if (pm.response.code === 204) {\r",
+									"        pm.response.to.have.body('');\r",
+									"    }\r",
+									"});\r",
+									"\r",
+									"pm.test(\"Eliminar un socio con id no existente\", function () {\r",
+									"    if (pm.response.code === 404) {\r",
+									"        pm.expect(pm.response.json().message).to.eql(\"The socio with the given id was not found\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Asociación",
+			"item": [
+				{
+					"name": "Add member to club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Agregar un socio a un club\", function () {\r",
+									"    if (pm.response.code === 201) {\r",
+									"        pm.response.to.have.body('');\r",
+									"    }\r",
+									"});"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs/1/members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find members from club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Obtener todos los socios de un club\", function () {\r",
+									"    pm.response.to.have.status(200);\r",
+									"    const responseJson = pm.response.json();\r",
+									"    pm.expect(responseJson).to.be.an(\"array\");\r",
+									"    responseJson.forEach(function(cuisineCulture) {\r",
+									"        pm.expect(cuisineCulture).to.be.an(\"object\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"id\");\r",
+									"        pm.expect(cuisineCulture).to.have.property(\"nombreUsuario\");\r",
+									"    });\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs/1/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Find member from club",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Obtener un socio que pertenece a un club\", function () {\r",
+									"    if (pm.response.code === 200) {\r",
+									"        const responseJson = pm.response.json();\r",
+									"        pm.expect(responseJson).to.be.an(\"object\");\r",
+									"        pm.expect(responseJson).to.have.property(\"id\");\r",
+									"        pm.expect(responseJson).to.have.property(\"nombreUsuario\");\r",
+									"        pm.expect(responseJson).to.have.property(\"correoElectronico\");\r",
+									"        pm.expect(responseJson).to.have.property(\"fechaNacimiento\");\r",
+									"    }\r",
+									"});\r",
+									""
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs/1/members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update members from club",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "[\r\n  \"1\",\r\n  \"2\",\r\n  \"3\"\r\n]\r\n",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{base_url}}/clubs/1/members",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1",
+								"members"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete member from club",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{base_url}}/clubs/1/members/1",
+							"host": [
+								"{{base_url}}"
+							],
+							"path": [
+								"clubs",
+								"1",
+								"members",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
