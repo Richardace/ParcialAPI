@@ -7,7 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
-import { SocioEntity } from 'src/socio/socio.entity';
+import { SocioEntity } from '../socio/socio.entity';
 
 
 
@@ -38,6 +38,14 @@ export class ClubService {
   }
 
   async create(club: ClubEntity): Promise<ClubEntity> {
+
+    if (!this.isValidDescription(club.descripcion)) {
+      throw new BusinessLogicException(
+        'La descripción no puede tener más de 100 caracteres',
+        BusinessError.PRECONDITION_FAILED,
+      );
+    }
+
     return await this.clubRepository.save(club);
   }
 
@@ -188,8 +196,8 @@ export class ClubService {
     await this.clubRepository.save(club);
   }
   
-  
-  
-  
+  private isValidDescription(description: string): boolean {
+    return description.length <= 100;
+  }
   
 }

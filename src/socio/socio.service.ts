@@ -33,6 +33,14 @@ export class SocioService {
   }
 
   async create(socio: SocioEntity): Promise<SocioEntity> {
+
+    if (!this.isValidEmail(socio.correoElectronico)) {
+      throw new BusinessLogicException(
+        'El correo electrónico proporcionado no es válido',
+        BusinessError.PRECONDITION_FAILED,
+      );
+    }
+
     return await this.socioRepository.save(socio);
   }
 
@@ -66,5 +74,11 @@ export class SocioService {
       );
     }
     await this.socioRepository.remove(socio);
+  }
+
+  private isValidEmail(email: string): boolean {
+    // Validar usando una expresión regular simple para verificar si contiene el '@'
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
   }
 }
