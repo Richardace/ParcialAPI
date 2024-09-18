@@ -9,7 +9,7 @@ import {
   @Entity()
   export class ClubEntity {
     @PrimaryGeneratedColumn()
-    id: number;
+    id: string;
   
     @Column()
     nombre: string;
