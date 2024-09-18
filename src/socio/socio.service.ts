@@ -40,17 +40,21 @@ export class SocioService {
     id: string,
     socio: SocioEntity,
   ): Promise<SocioEntity> {
+  
     const persistedSocio: SocioEntity =
       await this.socioRepository.findOne({ where: { id } });
+    
     if (!persistedSocio) {
       throw new BusinessLogicException(
         'The socio with the given id was not found',
         BusinessError.NOT_FOUND,
       );
     }
-    socio.id = id;
-    return await this.socioRepository.save(socio);
+  
+    this.socioRepository.merge(persistedSocio, socio)
+    return await this.socioRepository.save(persistedSocio);
   }
+  
 
   async delete(id: string): Promise<void> {
     const socio: SocioEntity =

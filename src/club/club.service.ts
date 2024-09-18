@@ -57,12 +57,6 @@ export class ClubService {
       );
     }
     this.clubRepository.merge(persistedClub, club);
-  
-    logger.log(persistedClub.id);
-    logger.log(persistedClub.descripcion);
-    logger.log(persistedClub.fechaFundacion);
-    logger.log(persistedClub.imagen);
-    logger.log(persistedClub.nombre);
     return await this.clubRepository.save(persistedClub);
   }
   
