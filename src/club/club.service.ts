@@ -7,6 +7,7 @@ import {
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Logger } from '@nestjs/common';
+import { SocioEntity } from 'src/socio/socio.entity';
 
 
 
@@ -14,8 +15,8 @@ import { Logger } from '@nestjs/common';
 export class ClubService {
 
   constructor(
-    @InjectRepository(ClubEntity)
-    private readonly clubRepository: Repository<ClubEntity>,
+    @InjectRepository(ClubEntity) private readonly clubRepository: Repository<ClubEntity>,
+    @InjectRepository(SocioEntity) private readonly socioRepository: Repository<SocioEntity>,
   ) {}
 
   async findAll(): Promise<ClubEntity[]> {
@@ -72,4 +73,123 @@ export class ClubService {
     }
     await this.clubRepository.remove(club);
   }
+
+  async addMemberToClub(idClub: string, idSocio: string): Promise<void> {
+    const club: ClubEntity = await this.clubRepository.findOne({ where: { id: idClub }, relations: ['socios'] });
+  
+    if (!club) {
+      throw new BusinessLogicException(
+        'The club with the given id was not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    const socio: SocioEntity = await this.socioRepository.findOne({ where: { id: idSocio } });
+  
+    if (!socio) {
+      throw new BusinessLogicException(
+        'The socio with the given id was not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    if (club.socios.some(existingSocio => existingSocio.id === socio.id)) {
+      throw new BusinessLogicException(
+        'The socio is already a member of the club',
+        BusinessError.PRECONDITION_FAILED,
+      );
+    }
+  
+    club.socios.push(socio);
+      await this.clubRepository.save(club);
+  }
+
+  async findMembersFromClub(idClub: string): Promise<SocioEntity[]> {
+    const club: ClubEntity = await this.clubRepository.findOne({ where: { id: idClub }, relations: ['socios'] });
+  
+    if (!club) {
+      throw new BusinessLogicException(
+        'The club with the given id was not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+    return club.socios;
+  }
+
+  async findMemberFromClub(idClub: string, idSocio: string): Promise<SocioEntity> {
+    const club: ClubEntity = await this.clubRepository.findOne({
+      where: { id: idClub },
+      relations: ['socios'],
+    });
+  
+    if (!club) {
+      throw new BusinessLogicException(
+        'The club with the given id was not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    const socio = club.socios.find(s => s.id == idSocio);
+  
+    if (!socio) {
+      throw new BusinessLogicException(
+        'The socio with the given id is not a member of the club',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    return socio;
+  }
+  
+
+  async updateMembersFromClub(idClub: string, newSocios: string[]): Promise<ClubEntity> {
+    const club: ClubEntity = await this.clubRepository.findOne({ where: { id: idClub }, relations: ['socios'] });
+  
+    if (!club) {
+      throw new BusinessLogicException(
+        'The club with the given id was not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    const socios = await this.socioRepository.findByIds(newSocios);
+  
+    if (socios.length !== newSocios.length) {
+      throw new BusinessLogicException(
+        'Some socios were not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    club.socios = socios;
+    return await this.clubRepository.save(club);
+  }
+
+  async deleteMemberFromClub(idClub: string, idSocio: string): Promise<void> {
+    const club: ClubEntity = await this.clubRepository.findOne({ where: { id: idClub }, relations: ['socios'] });
+  
+    if (!club) {
+      throw new BusinessLogicException(
+        'The club with the given id was not found',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    const socioIndex = club.socios.findIndex(s => s.id == idSocio);
+  
+    if (socioIndex === -1) {
+      throw new BusinessLogicException(
+        'The socio with the given id is not a member of the club',
+        BusinessError.NOT_FOUND,
+      );
+    }
+  
+    club.socios.splice(socioIndex, 1);
+    await this.clubRepository.save(club);
+  }
+  
+  
+  
+  
+  
 }
